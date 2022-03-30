@@ -11,16 +11,16 @@ const routes = [
 		// component: Home,
 
 		path: '/',
-		redirect: '/upload',
+		redirect: import.meta.env.VITE_PROD_BASE_URL + 'upload/',
 		name: 'Main',
 		component: Main,
 		children: [
 			{
-				path: '/upload',
+				path: import.meta.env.VITE_PROD_BASE_URL + 'upload/',
 				component: CardUpload
 			},
 			{
-				path: '/visualization',
+				path: import.meta.env.VITE_PROD_BASE_URL + 'visualization/',
 				component: Visualization
 			}
 		]
