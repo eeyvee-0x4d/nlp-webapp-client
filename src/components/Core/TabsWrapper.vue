@@ -60,7 +60,8 @@
 		mounted() {
 			this.fetchData()
 				.then(response => {
-					// console.log(response)
+					// console.log(response.data)
+
 					response.data.forEach((item, index) => {
 						// console.log(this.$refs.lineChart[index].testData)
 
@@ -69,40 +70,42 @@
 							datasets: [
 								{
 									label: 'Positive',
-									data: [69,69]
+									data: []
 								},
 								{
 									label: 'Negative',
-									data: [69,69]
+									data: []
 								}
 							]
 						};
 
-						let labels = []
-						let data = []
+						if(item.sentiments != null) {
+							let labels = []
+							let data = []
 
-						for(const [key,value] of Object.entries(item.sentiments[0])) {
-							labels.push(key)
-							data.push(value)
+							for(const [key,value] of Object.entries(item.sentiments[0])) {
+								labels.push(key)
+								data.push(value)
+							}
+
+							this.$refs.lineChart[index].chartData.labels = labels
+							this.$refs.lineChart[index].chartData.datasets[0].data = data
+
+							labels = []
+							data = []
+
+							for(const [key,value] of Object.entries(item.sentiments[1])) {
+								labels.push(key)
+								data.push(value)
+							}
+
+							this.$refs.lineChart[index].chartData.labels = labels
+							this.$refs.lineChart[index].chartData.datasets[1].data = data
+
+							// this.$refs.lineChart[index].chartData = chartData
+
+							this.isFetchingData = false;
 						}
-
-						this.$refs.lineChart[index].chartData.labels = labels
-						this.$refs.lineChart[index].chartData.datasets[0].data = data
-
-						labels = []
-						data = []
-
-						for(const [key,value] of Object.entries(item.sentiments[1])) {
-							labels.push(key)
-							data.push(value)
-						}
-
-						this.$refs.lineChart[index].chartData.labels = labels
-						this.$refs.lineChart[index].chartData.datasets[1].data = data
-
-						// this.$refs.lineChart[index].chartData = chartData
-
-						this.isFetchingData = false;
 					});
 				})
 				.catch()
