@@ -53,7 +53,6 @@
 
 						document.cookie = 'sessionid=' + response.data['sessionid']
 						this.message = 'Redirecting to home...'
-						// console.log(response)
 						
 						window.location.replace(import.meta.env.VITE_CLIENT_BASE_URL)
 					})
