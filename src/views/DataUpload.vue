@@ -13,6 +13,6 @@
 		name: 'DataUpload',
 		components: {
 			CardUpload	
-		}
+		},
 	});
 </script>

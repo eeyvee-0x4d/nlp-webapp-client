@@ -1,15 +1,12 @@
 import { createWebHistory, createRouter} from "vue-router"
 import Home from '../components/Home.vue';
 import Main from '../layouts/Main.vue';
+import Session from '../layouts/Session.vue'
 import CardUpload from '../components/Cards/CardUpload.vue';
 import Visualization from '../views/Visualization.vue';
 
 const routes = [
 	{
-		// path: '/',
-		// name: 'Home',
-		// component: Home,
-
 		path: '/',
 		redirect: '/upload/',
 		name: 'Main',
@@ -24,6 +21,11 @@ const routes = [
 				component: Visualization
 			}
 		]
+	},
+	{
+		path: '/session',
+		name: 'Session',
+		component: Session
 	}
 ];
 

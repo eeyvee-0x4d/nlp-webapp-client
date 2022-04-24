@@ -19,7 +19,7 @@ Positive-to-Negative Sentiment Ratio</p>
 </template>
 
 <script>
-	import { defineComponent } from 'vue';
+	import { defineComponent, onBeforeMount } from 'vue';
 
 	import Breadcrumbs from '../components/Core/Breadcrumbs.vue';
 	import CardUpload from '../components/Cards/CardUpload.vue'
@@ -29,6 +29,21 @@ Positive-to-Negative Sentiment Ratio</p>
 		components: {
 			Breadcrumbs,
 			CardUpload
+		},
+		setup() {
+			onBeforeMount(() => {
+				let rawCookies = document.cookie.split('; ')
+				let cookies = {}
+
+				rawCookies.forEach((item, index) => {
+					let cookie = item.split('=')
+					cookies[cookie[0]] = cookie[1]
+				})
+				
+				if(!('sessionid' in cookies)) {
+					window.location.replace(import.meta.env.VITE_CLIENT_BASE_URL + '/session')
+				}	
+			}) 
 		}
 	});
 </script>
