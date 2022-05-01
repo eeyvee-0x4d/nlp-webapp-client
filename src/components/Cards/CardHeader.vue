@@ -12,10 +12,10 @@
 				Loading data...
 			</span>
 		</div>
-		<div v-else class="grid grid-cols-4 p-4 place-content-evenly divide-x">
+		<div v-else class="grid grid-cols-5 p-4 place-content-evenly divide-x">
 			<div>
 				<CardStats ref="cardStat1"/>
-			</div>
+			</div>			
 			<div>
 				<CardStats ref="cardStat2"/>
 			</div>
@@ -24,6 +24,9 @@
 			</div>
 			<div>
 				<CardStats ref="cardStat4"/>
+			</div>
+			<div>
+				<CardStats ref="cardStat5"/>
 			</div>
 		</div>
 	</div>
@@ -49,7 +52,11 @@
 			async fetchData() {
 				this.isFetchingData = true
 
-				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/data_overview/');
+				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/data_overview/',
+					{
+						withCredentials: true
+					}
+				);
 
 				if (response.statusText !== "OK") {
 					throw new Error(`HTTP error! status: ${response.status}`)
@@ -101,23 +108,28 @@
 				.then(response => {
 					// console.log(response)
 
-					this.$refs.cardStat1.kpiHeader = 'Pfizer'
-					this.$refs.cardStat1.kpiBigNumber = (response.data.pfizer === null) ? 'n.d' : this.abbrNum(response.data.pfizer, 1)
+					this.$refs.cardStat1.kpiHeader = 'Overall'
+					this.$refs.cardStat1.kpiBigNumber = (response.data.pfizer === null) ? 'n.a' : response.data.Overall
 					this.$refs.cardStat1.kpiSubHeader = (response.data.pfizer === null) ? '' : 'Tweets'
 
-					this.$refs.cardStat2.kpiHeader = 'Sinovac'
-					this.$refs.cardStat2.kpiBigNumber = (response.data.sinovac === null) ? 'n.d' : this.abbrNum(response.data.sinovac, 1)
+					this.$refs.cardStat2.kpiHeader = 'Pfizer'
+					this.$refs.cardStat2.kpiBigNumber = (response.data.sinovac === null) ? 'n.a' : response.data.Pfizer
 					this.$refs.cardStat2.kpiSubHeader = (response.data.sinovac === null) ? '' : 'Tweets'
 
-					this.$refs.cardStat3.kpiHeader = 'AstraZeneca'
-					this.$refs.cardStat3.kpiBigNumber = (response.data.astrazeneca === null) ? 'n.d' : this.abbrNum(response.data.astrazeneca, 1)
+					this.$refs.cardStat3.kpiHeader = 'Sinovac'
+					this.$refs.cardStat3.kpiBigNumber = (response.data.astrazeneca === null) ? 'n.a' : response.data.Sinovac
+
 					this.$refs.cardStat3.kpiSubHeader = (response.data.astrazeneca === null) ? '' : 'Tweets'
 
-					this.$refs.cardStat4.kpiHeader = 'Moderna'
-					this.$refs.cardStat4.kpiBigNumber = (response.data.moderna === null) ? 'n.d' : this.abbrNum(response.data.moderna, 1)
+					this.$refs.cardStat4.kpiHeader = 'Astrazeneca'
+					this.$refs.cardStat4.kpiBigNumber = (response.data.moderna === null) ? 'n.a' : response.data.Astrazeneca
+
 					this.$refs.cardStat4.kpiSubHeader = (response.data.moderna === null) ? '' : 'Tweets'
 
+					this.$refs.cardStat5.kpiHeader = 'Moderna'
+					this.$refs.cardStat5.kpiBigNumber = (response.data.pfizer === null) ? 'n.a' : response.data.Moderna
 
+					this.$refs.cardStat5.kpiSubHeader = (response.data.pfizer === null) ? '' : 'Tweets'
 				})
 				.catch()
 		}
