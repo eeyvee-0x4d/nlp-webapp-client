@@ -94,7 +94,7 @@
 			handleClick(el) {
 				let chart = Chart.getChart('bar-chart')
 				chart.ctx.fillStyle = "#ffffff"
-				const URI = chart.toBase64Image('image/jpeg', 1)
+				const URI = chart.toBase64Image('image/png', 1)
 				
 				var image = new Image()
 				image.src = URI
@@ -102,7 +102,7 @@
 				var link = document.createElement("a");
 			    document.body.appendChild(link);
 				link.setAttribute("href", URI);
-		        link.setAttribute("download", 'Vaccine Sentiments.jpeg');
+		        link.setAttribute("download", 'Vaccine Sentiments.png');
 		        link.click();			
 		    }
 		},

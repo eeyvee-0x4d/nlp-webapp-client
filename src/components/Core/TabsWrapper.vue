@@ -71,12 +71,12 @@
 
 					let chart = Chart.getChart(item)
 
-					let URI = chart.toBase64Image('image/jpeg', 1)
+					let URI = chart.toBase64Image('image/png', 1)
 				
 					var image = new Image()
 					image.src = URI
 
-					let filename = `${this.$refs.tab[index].title} Vaccine Sentiment Trend.jpeg`
+					let filename = `${this.$refs.tab[index].title} Vaccine Sentiment Trend.png`
 
 					var link = document.createElement("a");
 					document.body.appendChild(link);
