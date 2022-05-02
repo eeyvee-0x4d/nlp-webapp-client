@@ -11,7 +11,7 @@
 		</div>
 		<div class="px-4 flex-auto">
 			<div class="relative h-350-px">
-				<LineChart :chartData="chartData" />
+				<LineChart :chartData="chartData" :plugins="[plugin]" />
 			</div>
 		</div>
 	</div>
@@ -40,20 +40,53 @@
 				datasets: [
 					{
 						label: 'Positive',
-						backgroundColor: "#66bd63",
-						borderColor: "#66bd63",
-						data: []
+					    data: [],
+					    fill: false,
+					    backgroundColor: "#66bd63",
+					    borderColor: "#66bd63",
+					    tension: 0.5
 					},
 					{
 						label: 'Negative',
-						backgroundColor: "#f46d43",
-						borderColor: "#f46d43",
-						data: []
-					}
-				]
+					    data: [],
+					    fill: false,
+					    backgroundColor: "#f46d43",
+					    borderColor: "#f46d43",
+					    tension: 0.5
+					},
+				],
+				options: {
+					maintainAspectRatio: true,
+					responsive: true,
+					tooltips: {
+						mode: "index",
+						intersect: false
+					},
+					hover: {
+						mode: "nearest",
+						intersect: true
+					},
+				},
 			};
 
-			return {chartData};
+			const plugin = {
+				id: 'custom_canvas_background_color',
+				beforeDraw: (chart) => {
+					const ctx = chart.canvas.getContext('2d')
+					ctx.save()
+					ctx.globalCompositeOperation = 'destination-over'
+					ctx.fillStyle = '#ffffff'
+					ctx.fillRect(0, 0, chart.width, chart.height);
+					ctx.restore()
+
+				}
+			}
+
+
+			return {
+				chartData,
+				plugin
+			};
 		}
 
 	});

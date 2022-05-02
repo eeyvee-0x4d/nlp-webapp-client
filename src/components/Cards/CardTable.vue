@@ -12,7 +12,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="max-h-96 overflow-auto">
+		<div class="max-h-96 overflow-auto border">
 			<table class="w-full table-auto text-left text-sm">
 				<!-- start table header -->
 				<thead class="text-center">

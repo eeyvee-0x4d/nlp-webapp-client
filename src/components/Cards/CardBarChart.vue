@@ -24,34 +24,39 @@
 					</span>
 				</div>
 				<div v-else>
-					<div class="flex flex-auto py-4 place-content-evenly divide-x">
+					<div class="flex flex-auto py-4 place-content-evenly divide-x break-words">
 						<div class="relative px-2">
 							<p class="text-base font-bold text-left"> Overall </p>
 							<p class="text-sm text-left"> Positive sentiments: <br/> <strong> {{ dataSummary.Overall[0] }} ({{ dataSummary.Overall[1] }}%)</strong> </p>
 							<p class="text-sm text-left"> Negative sentiments: <br/> <strong> {{ dataSummary.Overall[2] }} ({{ dataSummary.Overall[3] }}%)</strong> </p>
+							<p class="text-sm text-left"> Sentiment: <br/> <strong> {{ dataSummary.Overall[4] }}</strong> </p>
 						</div>
 						<div class="relative px-2">
 							<p class="text-base font-bold text-left"> Pfizer </p>
 							<p class="text-sm text-left"> Positive sentiments: <br/> <strong> {{ dataSummary.Pfizer[0] }} ({{ dataSummary.Pfizer[1] }}%) </strong> </p>
-							<p class="text-sm text-left"> Negative sentiments: <br/> <strong> {{ dataSummary.Pfizer[2] }} ({{ dataSummary.Pfizer[3] }}%) </strong> </p>						
+							<p class="text-sm text-left"> Negative sentiments: <br/> <strong> {{ dataSummary.Pfizer[2] }} ({{ dataSummary.Pfizer[3] }}%) </strong> </p>	
+							<p class="text-sm text-left"> Sentiment: <br/> <strong> {{ dataSummary.Pfizer[4] }}</strong> </p>					
 						</div>
 						<div class="relative px-2">
 							<p class="text-base font-bold text-left"> Sinovac </p>
 							<p class="text-sm text-left"> Positive sentiments: <br/> <strong>{{ dataSummary.Sinovac[0] }} ({{ dataSummary.Sinovac[1] }}%) </strong> </p>
-							<p class="text-sm text-left"> Negative sentiments: <br/> <strong>{{ dataSummary.Sinovac[2] }} ({{ dataSummary.Sinovac[3] }}%) </strong> </p>						
+							<p class="text-sm text-left"> Negative sentiments: <br/> <strong>{{ dataSummary.Sinovac[2] }} ({{ dataSummary.Sinovac[3] }}%) </strong> </p>
+							<p class="text-sm text-left"> Sentiment: <br/> <strong> {{ dataSummary.Sinovac[4] }}</strong> </p>						
 						</div>
 						<div class="relative px-2">
 							<p class="text-base font-bold text-left"> Astrazeneca </p>
 							<p class="text-sm text-left"> Positive sentiments: <br/> <strong> {{ dataSummary.Astrazeneca[0] }} ({{ dataSummary.Astrazeneca[1] }}%) </strong> </p>
 							<p class="text-sm text-left"> Negative sentiments: <br/> <strong> {{ dataSummary.Astrazeneca[2] }} ({{ dataSummary.Astrazeneca[3] }}%) </strong> </p>
+							<p class="text-sm text-left"> Sentiment: <br/> <strong> {{ dataSummary.Astrazeneca[4] }}</strong> </p>
 						</div>
 						<div class="relative px-2">
 							<p class="text-base font-bold text-left"> Moderna </p>
 							<p class="text-sm text-left"> Positive sentiments: <br/> <strong> {{ dataSummary.Moderna[0] }} ({{ dataSummary.Moderna[1] }}%) </strong> </p>
 							<p class="text-sm text-left"> Negative sentiments: <br/> <strong> {{ dataSummary.Moderna[2] }} ({{ dataSummary.Moderna[3] }}%) </strong> </p>
+							<p class="text-sm text-left"> Sentiment: <br/> <strong> {{ dataSummary.Moderna[4] }}</strong> </p>
 						</div>
 					</div>
-					<BarChart id="barChart" :chartData="chartData"/>
+					<BarChart id="barChart" :chartData="chartData" :plugins="[plugin]"/>
 				</div>
 			</div>
 		</div>
@@ -93,7 +98,9 @@
 			},
 			handleClick(el) {
 				let chart = Chart.getChart('bar-chart')
-				chart.ctx.fillStyle = "#ffffff"
+
+
+				console.log(chart.ctx)
 				const URI = chart.toBase64Image('image/png', 1)
 				
 				var image = new Image()
@@ -128,7 +135,7 @@
 					},
 				],
 				options: {
-					maintainAspectRatio: false,
+					maintainAspectRatio: true,
 					responsive: true,
 					tooltips: {
 						mode: "index",
@@ -138,24 +145,21 @@
 						mode: "nearest",
 						intersect: true
 					},
-					animation: {
-						onComplete: function() {
-							console.log("Hello")						
-						}
-					},
 				},
-				plugins: [
-					{
-						id: 'custom_canvas_background_color',
-						beforeDraw: (chart) => {
-							const ctx = chart.canvas.getContext('2d');
-						    ctx.save();
-						    ctx.fillStyle = 'lightGreen'
-						    ctx.restore()
-						}
-					}
-				]
 			};
+
+			const plugin = {
+				id: 'custom_canvas_background_color',
+				beforeDraw: (chart) => {
+					const ctx = chart.canvas.getContext('2d')
+					ctx.save()
+					ctx.globalCompositeOperation = 'destination-over'
+					ctx.fillStyle = '#ffffff'
+					ctx.fillRect(0, 0, chart.width, chart.height);
+					ctx.restore()
+
+				}
+			}
 
 			let dataSummary ={
 				'Overall': [],
@@ -170,27 +174,13 @@
 			return {
 				chartData,
 				fetchingData,
-				dataSummary
+				dataSummary,
+				plugin
 			};
 		},
 		mounted() {
 			this.fetchData()
 				.then(response => {
-					// console.log(response)
-
-					// this.chartData = {
-					// 	labels: [],
-					// 	datasets: [
-					// 		{
-					// 			label: "Positive",
-					// 			data: []
-					// 		},
-					// 		{
-					// 			label: "Negative",
-					// 			data: []
-					// 		}
-					// 	]
-					// };
 
 					for (let key in response.data) {
 						this.chartData.labels.push(key)
@@ -199,30 +189,23 @@
 
 						let posPercentage = ((response.data[key].positive / (response.data[key].positive + response.data[key].negative)) * 100).toFixed(2);
 						let negPercentage = ((response.data[key].negative / (response.data[key].positive + response.data[key].negative)) * 100).toFixed(2);
+						let sentiment = ""
 
-						this.dataSummary[key] = [response.data[key].positive, posPercentage, response.data[key].negative, negPercentage]
+						if (posPercentage > 60) {
+							sentiment = "Positive"
+						}
+						else if (negPercentage > 60) {
+							sentiment = "Negative"
+						}
+						else if (60 > posPercentage || 60 > negPercentage) {
+							sentiment = "either Positive or Negative"
+						}
+						else if (0 === posPercentage && 0 === negPercentage) {
+							sentiment = "None"
+						}
+
+						this.dataSummary[key] = [response.data[key].positive, posPercentage, response.data[key].negative, negPercentage, sentiment]
 					}
-
-					// response.data.forEach(item => {
-						
-					// 	if(item.sentiments !== null) {
-					// 		this.chartData.labels.push((item.name.charAt(0).toUpperCase() + item.name.slice(1)))
-					// 		this.chartData.datasets[0].data.push(item.sentiments[0]['positive'])
-					// 		this.chartData.datasets[1].data.push(item.sentiments[0]['negative'])
-
-					// 		let posPercentage = ((item.sentiments[0]['positive'] / (item.sentiments[0]['positive'] + item.sentiments[0]['negative'])) * 100).toFixed(2);
-					// 		let negPercentage = ((item.sentiments[0]['negative'] / (item.sentiments[0]['positive'] + item.sentiments[0]['negative'])) * 100).toFixed(2);
-
-					// 		this.dataSummary[item.name] = [posPercentage, negPercentage];
-					// 	}
-					// 	else {
-					// 		this.chartData.labels.push((item.name.charAt(0).toUpperCase() + item.name.slice(1)))
-					// 		this.chartData.datasets[0].data.push(0)
-					// 		this.chartData.datasets[1].data.push(0)
-
-					// 		this.dataSummary[item.name] = [null, null];
-					// 	}
-					// });
 				
 					this.fetchingData = false
 				})
