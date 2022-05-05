@@ -63,9 +63,14 @@
 
 				this.isFetchingData = true;
 
+				let sessionId = localStorage.getItem('sessionid')
+
 				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/sentiment_trend/',
 					{
-						withCredentials: true
+						withCredentials: true,
+						params: {
+							sessionid: sessionId
+						}
 					}
 				)
 

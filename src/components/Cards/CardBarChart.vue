@@ -84,9 +84,14 @@
 			async fetchData() {
 				this.fetchingData = true
 
+				let sessionId = localStorage.getItem('sessionid')
+
 				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/sentiment_overview/',
 					{
-						withCredentials: true
+						withCredentials: true,
+						params: {
+							sessionid: sessionId
+						}
 					}
 				)
 

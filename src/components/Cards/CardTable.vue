@@ -63,12 +63,16 @@
 		},
 		methods: {
 			async fetchData() {
+
+				let sessionId = localStorage.getItem('sessionid')
+
 				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/all_data/', 
 					{
 						withCredentials: true,
 						params: {
 							page_number: this.page_number++,
-							page_size: this.page_size
+							page_size: this.page_size,
+							sessionid: sessionId
 						}
 					}
 				)
@@ -80,9 +84,15 @@
 				return await response;
 			},
 			async export_file() {
+
+				let sessionId = localStorage.getItem('sessionid')
+
 				let response = await axios.get(import.meta.env.VITE_DJANGO_BASE_URL + '/export_file',
 					{
-						withCredentials: true,		
+						withCredentials: true,
+						params: {
+							sessionid: sessionId
+						}
 					}
 				)
 
@@ -93,14 +103,11 @@
 				return await response;
 			},
 			handleClick() {
-				// this.export_file()
-				// .then((response) => {
-				// 	console.log(response)
-				// })
-				// .catch()
+				let sessionId = localStorage.getItem('sessionid')
+
 				var link = document.createElement("a");
 			    document.body.appendChild(link);
-				link.setAttribute("href",import.meta.env.VITE_DJANGO_BASE_URL + '/export_file');
+				link.setAttribute("href",import.meta.env.VITE_DJANGO_BASE_URL + '/export_file/?sessionid=' + sessionId);
 		        link.setAttribute("download", 'Vaccine Sentiments.csv');
 		        link.click();
 			},
@@ -112,7 +119,6 @@
 						...this.data,
 						...JSON.parse(response.data)
 					}
-					console.log(this.data)
 				})
 				.catch()
 			}

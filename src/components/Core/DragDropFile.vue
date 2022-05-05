@@ -69,12 +69,17 @@
 
 				async function uploadFiles() {
 
+					let sessionId = localStorage.getItem('sessionid')
+
 					let response = await axios.post(import.meta.env.VITE_DJANGO_BASE_URL + '/upload/',
 						formData,
 						{
 							withCredentials: true,
 							headers: {
 								'Content-Type': 'multipart/form-data'
+							},
+							params: {
+								sessionid: sessionId
 							}
 						}
 					);

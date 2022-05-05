@@ -52,6 +52,8 @@
 					.then((response) => {
 
 						document.cookie = 'sessionid=' + response.data['sessionid']
+						localStorage.setItem('sessionid', response.data['sessionid'])
+
 						this.message = 'Redirecting to home...'
 						
 						window.location.replace(import.meta.env.VITE_CLIENT_BASE_URL)
