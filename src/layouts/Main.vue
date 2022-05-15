@@ -16,19 +16,25 @@ Positive-to-Negative Sentiment Ratio</p>
 		<router-view />
 		<!-- Upload Section end -->
 	</div>
+	<FloatingButton @click="handleClick()" />
+	<Popup ref="popup" />
 </template>
 
 <script>
 	import { defineComponent, onBeforeMount } from 'vue';
 
 	import Breadcrumbs from '../components/Core/Breadcrumbs.vue';
-	import CardUpload from '../components/Cards/CardUpload.vue'
+	import CardUpload from '../components/Cards/CardUpload.vue';
+	import FloatingButton from '../components/Core/FloatingButton.vue';
+	import Popup from '../components/Core/Popup.vue'
 
 	export default defineComponent({
 		name: 'Main',
 		components: {
 			Breadcrumbs,
-			CardUpload
+			CardUpload,
+			FloatingButton,
+			Popup
 		},
 		setup() {
 			onBeforeMount(() => {
@@ -44,6 +50,11 @@ Positive-to-Negative Sentiment Ratio</p>
 					window.location.replace(import.meta.env.VITE_CLIENT_BASE_URL + '/session')
 				}	
 			}) 
+		},
+		methods: {
+			handleClick() {
+				this.$refs.popup.show = true
+			}
 		}
 	});
 </script>
